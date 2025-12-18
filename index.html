@@ -5,9 +5,8 @@
     <title>Merry Christmas, My Love</title>
     <style>
         body {
-            margin: 0;
-            padding: 0;
-            background: #ffe4e1; /* 深蓝色背景代表平安夜 */
+            margin: 0; padding: 0;
+            background: #0a192f;
             overflow: hidden;
             font-family: 'STKaiti', '楷体', serif;
             display: flex;
@@ -16,7 +15,7 @@
             height: 100vh;
         }
 
-        /* 雪花效果 */
+        /* 雪花 */
         .snowflake {
             color: #fff;
             position: absolute;
@@ -27,14 +26,12 @@
             animation: fall linear infinite;
         }
 
-        @keyframes fall {
-            to { transform: translateY(105vh); }
-        }
+        @keyframes fall { to { transform: translateY(105vh); } }
 
-        /* 圣诞卡容器 */
+        /* 圣诞卡 */
         .card {
-            width: 300px;
-            height: 400px;
+            width: 320px;
+            min-height: 420px;
             background: #c0392b;
             border-radius: 15px;
             box-shadow: 0 20px 50px rgba(0,0,0,0.5);
@@ -44,20 +41,19 @@
             justify-content: center;
             color: #f1c40f;
             cursor: pointer;
-            transition: transform 0.6s;
+            transition: all 0.6s ease;
             text-align: center;
             padding: 20px;
             z-index: 10;
+            position: relative;
         }
 
-        .card:hover {
-            transform: scale(1.05);
-        }
+        .card:hover { transform: scale(1.03); }
 
-        h1 { font-size: 2em; margin-bottom: 10px; }
-        p { color: #fff; line-height: 1.6; display: none; }
+        h1 { font-size: 2em; margin-bottom: 10px; transition: 0.5s; }
+        p { color: #fff; line-height: 1.8; display: none; font-size: 1.1em; }
 
-        /* 简易圣诞树 */
+        /* 圣诞树 */
         .tree {
             width: 0; height: 0;
             border-left: 50px solid transparent;
@@ -66,27 +62,41 @@
             margin-bottom: 20px;
             position: relative;
         }
-        .tree::after {
-            content: "⭐";
-            position: absolute;
-            top: -25px; left: -12px;
-        }
+        .tree::after { content: "⭐"; position: absolute; top: -25px; left: -12px; }
 
-        /* 交互后的样式 */
+        /* 状态切换 */
+        .card.open { background: #b03023; }
         .card.open p { display: block; animation: fadeIn 2s; }
         .card.open .tree { display: none; }
-        .card.open h1 { font-size: 1.5em; }
+        .card.open h1 { font-size: 1.6em; color: #fff; }
+        .card.open .hint { display: none; }
 
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+        /* 爱心喷泉效果 */
+        .heart {
+            position: absolute;
+            color: #e74c3c;
+            animation: fly 2s ease-out forwards;
+            pointer-events: none;
+        }
+        @keyframes fly {
+            0% { transform: translate(0, 0) scale(1); opacity: 1; }
+            100% { transform: translate(var(--x), var(--y)) scale(0.5); opacity: 0; }
+        }
     </style>
 </head>
 <body>
 
-    <div class="card" onclick="openCard()">
+    <audio id="bgMusic" loop>
+        <source src="https://api.uomg.com/api/rand.music?sort=热歌榜" type="audio/mpeg">
+        </audio>
+
+    <div class="card" id="mainCard" onclick="openCard()">
         <div class="tree"></div>
-        <h1 id="title">给最亲爱的baby</h1>
+        <h1 id="title">给最亲爱的你</h1>
         <p id="message">
-            Dear Peggy：<br><br>
+            亲爱的 💗Peggy宝宝💗：<br><br>
             when I think of you, I’m reminded of the beautiful plains of Iowa.<br>
             The distance between us is breaking my spirit.<br>
             Falling in love with you was the easiest thing I have ever done.<br>
@@ -96,11 +106,13 @@
             And I will love you to rest of my life.<br><br>
             🎄 Merry Christmas, my girl! 🎄
         </p>
-        <div style="font-size: 0.8em; margin-top: 20px; color: #eee;">(点击拆开信封)</div>
+        <div class="hint" style="font-size: 0.8em; margin-top: 20px; color: #eee; opacity: 0.8;">
+            (点击拆开信封 & 开启音乐)
+        </div>
     </div>
 
     <script>
-        // 生成雪花
+        // 1. 雪花生成逻辑
         function createSnow() {
             const snowflake = document.createElement('div');
             snowflake.innerHTML = '❄';
@@ -114,11 +126,39 @@
         }
         setInterval(createSnow, 100);
 
-        // 点击交互
+        // 2. 爱心喷泉逻辑
+        function createHeart() {
+            for(let i=0; i<15; i++) {
+                const heart = document.createElement('div');
+                heart.innerHTML = '❤️';
+                heart.classList.add('heart');
+                heart.style.setProperty('--x', (Math.random() - 0.5) * 400 + 'px');
+                heart.style.setProperty('--y', (Math.random() - 0.5) * 400 + 'px');
+                heart.style.left = '50%';
+                heart.style.top = '50%';
+                document.getElementById('mainCard').appendChild(heart);
+                setTimeout(() => { heart.remove(); }, 2000);
+            }
+        }
+
+        // 3. 点击交互（开启音乐+改变样式+爱心效果）
+        let isOpen = false;
         function openCard() {
-            const card = document.querySelector('.card');
+            if(isOpen) return; // 防止重复触发
+            
+            const card = document.getElementById('mainCard');
+            const music = document.getElementById('bgMusic');
+            
             card.classList.add('open');
             document.getElementById('title').innerText = "Merry Christmas! ❤️";
+            
+            // 播放音乐
+            music.play().catch(err => {
+                console.log("浏览器拦截了自动播放，需再次点击确认");
+            });
+
+            createHeart();
+            isOpen = true;
         }
     </script>
 </body>
