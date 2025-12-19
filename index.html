@@ -177,7 +177,7 @@
             <div class="tree-trunk"></div>
             
             <div class="samoyed-icon">
-                <img src="https://placedog.net/200/200?id=12" alt="Samoyed" id="samoyedImg">
+                <img src="yeye.png" alt="Samoyed" id="samoyedImg">
             </div>
             
             <div class="light" style="background:#fff; top:20px; left:0;"></div>
@@ -209,7 +209,7 @@
         // 1. 混合背景生成：雪花 + 萨姆耶爪印
         function createSnow() {
             const snowflake = document.createElement('div');
-            const isPaw = Math.random() > 0.8; // 35% 几率出现小爪印
+            const isPaw = Math.random() > 0.7; // 30% 几率出现小爪印
             snowflake.innerHTML = isPaw ? '🐾' : '❄';
             snowflake.classList.add('snowflake');
             snowflake.style.left = Math.random() * 100 + 'vw';
