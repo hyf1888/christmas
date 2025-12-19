@@ -28,6 +28,37 @@
 
         @keyframes fall { to { transform: translateY(105vh); } }
 
+        /* --- 新增：萨摩耶走动逻辑 --- */
+        .samoyed-container {
+            position: absolute;
+            bottom: 20px; /* 距离底部距离 */
+            left: -100px;
+            font-size: 50px; /* 萨摩耶的大小 */
+            z-index: 5;
+            animation: walk 15s linear infinite;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        /* 萨摩耶的文字备注（可选） */
+        .samoyed-tag {
+            font-size: 12px;
+            background: rgba(255,255,255,0.6);
+            padding: 2px 8px;
+            border-radius: 10px;
+            color: #d63031;
+            margin-bottom: -5px;
+        }
+
+        @keyframes walk {
+            0% { left: -100px; transform: scaleX(1); }
+            45% { transform: scaleX(1); }
+            50% { left: calc(100vw + 100px); transform: scaleX(-1); } /* 到右侧后转身 */
+            95% { transform: scaleX(-1); }
+            100% { left: -100px; transform: scaleX(1); }
+        }
+
         /* 圣诞卡 */
         .card {
             width: 320px;
@@ -116,6 +147,11 @@
     <audio id="bgMusic" loop>
         <source src="christmas.mp3" type="audio/mpeg">
     </audio>
+
+    <div class="samoyed-container">
+        <div class="samoyed-tag">耶耶送福~</div>
+        <img src="https://tenor.com/zh-CN/view/maya-maya-polar-bear-samoyed-dog-doggo-gif-17800090" width="100" style="filter: drop-shadow(2px 2px 5px rgba(0,0,0,0.1));">
+    </div>
 
     <div class="card" id="mainCard" onclick="openCard()">
         <div class="tree-container">
