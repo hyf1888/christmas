@@ -33,22 +33,12 @@
             position: absolute;
             bottom: 20px; /* 距离底部距离 */
             left: -100px;
-            font-size: 50px; /* 萨摩耶的大小 */
+            font-size: 200px; /* 萨摩耶的大小 */
             z-index: 5;
-            animation: walk 15s linear infinite;
+            animation: walk 5s linear infinite;
             display: flex;
             flex-direction: column;
             align-items: center;
-        }
-
-        /* 萨摩耶的文字备注（可选） */
-        .samoyed-tag {
-            font-size: 12px;
-            background: rgba(255,255,255,0.6);
-            padding: 2px 8px;
-            border-radius: 10px;
-            color: #d63031;
-            margin-bottom: -5px;
         }
 
         @keyframes walk {
@@ -150,7 +140,7 @@
 
     <div class="samoyed-container">
         <div class="samoyed-tag">耶耶送福~</div>
-        <img src="https://tenor.com/zh-CN/view/maya-maya-polar-bear-samoyed-dog-doggo-gif-17800090" width="100" style="filter: drop-shadow(2px 2px 5px rgba(0,0,0,0.1));">
+        <img src="yeye.jpg" width="100" style="filter: drop-shadow(2px 2px 5px rgba(0,0,0,0.1));">
     </div>
 
     <div class="card" id="mainCard" onclick="openCard()">
