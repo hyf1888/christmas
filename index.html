@@ -15,7 +15,7 @@
             height: 100vh;
         }
 
-        /* 雪花 */
+        /* 雪花与爪印混合 */
         .snowflake {
             color: #fff;
             position: absolute;
@@ -32,7 +32,7 @@
         .card {
             width: 320px;
             min-height: 420px;
-            background: #e74c3c; /* 圣诞红 */
+            background: #e74c3c;
             border-radius: 20px;
             box-shadow: 0 15px 35px rgba(0,0,0,0.2);
             display: flex;
@@ -45,17 +45,18 @@
             text-align: center;
             padding: 30px;
             z-index: 10;
+            position: relative;
         }
 
         .card:hover { transform: translateY(-10px); }
 
-        h1 { font-size: 1.8em; margin-bottom: 15px; }
+        h1 { font-size: 1.8em; margin-bottom: 15px; z-index: 11; }
         p { color: #fff; line-height: 1.8; display: none; font-size: 1.1em; }
 
-        /* 优化后的形象圣诞树 */
+        /* 圣诞树容器 */
         .tree-container {
             position: relative;
-            margin-bottom: 30px;
+            margin-bottom: 35px;
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -72,17 +73,62 @@
         .layer-2 { border-left-width: 45px; border-right-width: 45px; border-bottom-width: 55px; border-bottom-color: #346b2e; }
         .layer-3 { border-left-width: 60px; border-right-width: 60px; border-bottom-width: 70px; border-bottom-color: #2d5a27; }
 
-        .tree-trunk {
-            width: 20px; height: 25px;
-            background: #5d3a1a;
+        .tree-trunk { width: 25px; height: 45px; background: #5d3a1a; }
+
+        /* 萨摩耶图片样式 */
+        .samoyed-icon {
+            position: absolute;
+            bottom: -15px;
+            right: -40px;
+            z-index: 15;
+            animation: bounce 2s infinite ease-in-out;
         }
 
-        .star {
-            color: #f1c40f;
-            font-size: 24px;
-            position: absolute;
-            top: -25px;
-            animation: blink 1.5s infinite;
+        .samoyed-icon img {
+            width: 65px;
+            height: 65px;
+            object-fit: cover;
+            border-radius: 50%;
+            border: 1px solid #fff;
+            box-shadow: 0 3px 8px rgba(0,0,0,0.3);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        /* 点击后的图片互动动画 */
+        .img-active {
+            animation: imgPop 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards !important;
+        }
+
+        @keyframes imgPop {
+            0% { transform: scale(1) rotate(0deg); }
+            50% { transform: scale(1.5) rotate(15deg); }
+            100% { transform: scale(1.2) rotate(-5deg); }
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0) rotate(5deg); }
+            50% { transform: translateY(-10px) rotate(-5deg); }
+        }
+
+        /* 底部引导区域 */
+        .hint-area {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-top: 20px;
+            color: #eee;
+            opacity: 0.9;
+        }
+
+        .hint-paw {
+            font-size: 1.2em;
+            color: white;
+            animation: pawTap 1s infinite alternate;
+        }
+
+        @keyframes pawTap {
+            from { transform: scale(1); opacity: 0.6; }
+            to { transform: scale(1.2); opacity: 1; }
         }
 
         /* 闪烁装饰灯 */
@@ -97,14 +143,19 @@
 
         /* 状态切换 */
         .card.open p { display: block; animation: fadeIn 1.5s; }
-        .card.open .tree-container { display: none; }
+        .card.open .tree-container, .card.open .hint-area { display: none; }
         .card.open h1 { color: #fff; }
-        .card.open .hint { display: none; }
 
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-        /* 爱心效果 */
-        .heart { position: absolute; color: #ff6b81; animation: fly 2s ease-out forwards; pointer-events: none; }
+        /* 特效元素样式 */
+        .pop-element { 
+            position: absolute; 
+            animation: fly 2s ease-out forwards; 
+            pointer-events: none; 
+            z-index: 20;
+        }
+        
         @keyframes fly {
             0% { transform: translate(0, 0) scale(1); opacity: 1; }
             100% { transform: translate(var(--x), var(--y)) scale(0.5); opacity: 0; }
@@ -119,16 +170,23 @@
 
     <div class="card" id="mainCard" onclick="openCard()">
         <div class="tree-container">
-            <div class="star">⭐</div>
+            <div class="star" style="color:#f1c40f; font-size: 24px;">⭐</div>
             <div class="tree-layer layer-1"></div>
             <div class="tree-layer layer-2"></div>
             <div class="tree-layer layer-3"></div>
             <div class="tree-trunk"></div>
+            
+            <div class="samoyed-icon">
+                <img src="https://placedog.net/200/200?id=12" alt="Samoyed" id="samoyedImg">
+            </div>
+            
             <div class="light" style="background:#fff; top:20px; left:0;"></div>
             <div class="light" style="background:#ff0; top:45px; left:20px; animation-delay:0.3s;"></div>
             <div class="light" style="background:#f00; top:70px; left:-15px; animation-delay:0.6s;"></div>
         </div>
+
         <h1 id="title">To My Best Love</h1>
+        
         <p id="message">
             When I think of you, I’m reminded of the beautiful plains of Iowa.<br>
             The distance between us is breaking my spirit.<br>
@@ -137,60 +195,69 @@
             And everyday I am alive, I'm aware of this.<br>
             I loved you the day I met you, I love you today.<br>
             And I will love you to rest of my life.<br><br>
-            🎄 Merry Christmas, my girl! 🎄
+            🎄 Merry Christmas, 💗My Gril💗! 🐾
         </p>
-        <div class="hint" style="font-size: 0.8em; margin-top: 20px; color: #eee; opacity: 0.8;">
-            (点击拆开信封)
+
+        <div class="hint-area">
+            <span class="hint-paw">🐾</span>
+            <div style="font-size: 0.9em; letter-spacing: 1px;">点击拆开信封</div>
+            <span class="hint-paw" style="animation-delay: 0.5s;">🐾</span>
         </div>
     </div>
 
     <script>
-        // 1. 雪花生成逻辑
+        // 1. 混合背景生成：雪花 + 萨姆耶爪印
         function createSnow() {
             const snowflake = document.createElement('div');
-            snowflake.innerHTML = '❄';
+            const isPaw = Math.random() > 0.8; // 35% 几率出现小爪印
+            snowflake.innerHTML = isPaw ? '🐾' : '❄';
             snowflake.classList.add('snowflake');
             snowflake.style.left = Math.random() * 100 + 'vw';
-            snowflake.style.animationDuration = Math.random() * 3 + 2 + 's';
-            snowflake.style.opacity = Math.random();
+            snowflake.style.animationDuration = Math.random() * 3 + 3 + 's';
+            snowflake.style.opacity = Math.random() * 0.7 + 0.3;
             snowflake.style.fontSize = Math.random() * 10 + 10 + 'px';
             document.body.appendChild(snowflake);
             setTimeout(() => { snowflake.remove(); }, 5000);
         }
-        setInterval(createSnow, 100);
+        setInterval(createSnow, 150);
 
-        // 2. 爱心喷泉逻辑
-        function createHeart() {
-            for(let i=0; i<15; i++) {
-                const heart = document.createElement('div');
-                heart.innerHTML = '❤️';
-                heart.classList.add('heart');
-                heart.style.setProperty('--x', (Math.random() - 0.5) * 400 + 'px');
-                heart.style.setProperty('--y', (Math.random() - 0.5) * 400 + 'px');
-                heart.style.left = '50%';
-                heart.style.top = '50%';
-                document.getElementById('mainCard').appendChild(heart);
-                setTimeout(() => { heart.remove(); }, 2000);
+        // 2. 混合喷泉逻辑
+        function createPopEffects() {
+            const elements = ['❤️', '🐶', '🦴', '🐾', '🤍'];
+            const card = document.getElementById('mainCard');
+            for(let i=0; i<30; i++) {
+                const item = document.createElement('div');
+                item.innerHTML = elements[Math.floor(Math.random() * elements.length)];
+                item.classList.add('pop-element');
+                item.style.setProperty('--x', (Math.random() - 0.5) * 600 + 'px');
+                item.style.setProperty('--y', (Math.random() - 0.5) * 600 + 'px');
+                item.style.left = '50%';
+                item.style.top = '50%';
+                item.style.fontSize = (Math.random() * 15 + 20) + 'px';
+                
+                card.appendChild(item);
+                setTimeout(() => { item.remove(); }, 2000);
             }
         }
 
-        // 3. 点击交互（开启音乐+改变样式+爱心效果）
+        // 3. 点击交互
         let isOpen = false;
         function openCard() {
-            if(isOpen) return; // 防止重复触发
+            if(isOpen) return;
             
             const card = document.getElementById('mainCard');
             const music = document.getElementById('bgMusic');
+            const dogImg = document.getElementById('samoyedImg');
             
             card.classList.add('open');
+            // 触发狗狗图片弹跳动画
+            dogImg.classList.add('img-active');
+            
             document.getElementById('title').innerText = "亲爱的 💗Peggy宝宝💗";
             
-            // 播放音乐
-            music.play().catch(err => {
-                console.log("浏览器拦截了自动播放，需再次点击确认");
-            });
+            music.play().catch(err => { console.log("等待交互播放音乐"); });
 
-            createHeart();
+            createPopEffects();
             isOpen = true;
         }
     </script>
