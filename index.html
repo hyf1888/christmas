@@ -218,13 +218,13 @@
             snowflake.innerHTML = isPaw ? '🐾' : '❄';
             snowflake.classList.add('snowflake');
             snowflake.style.left = Math.random() * 100 + 'vw';
-            snowflake.style.animationDuration = Math.random() * 2 + 1 + 's';
+            snowflake.style.animationDuration = Math.random() * 3 + 3 + 's';
             snowflake.style.opacity = Math.random() * 0.7 + 0.3;
             snowflake.style.fontSize = Math.random() * 10 + 10 + 'px';
             document.body.appendChild(snowflake);
             setTimeout(() => { snowflake.remove(); }, 5000);
         }
-        setInterval(createSnow, 50);
+        setInterval(createSnow, 100);
 
         // 2. 混合喷泉逻辑
         function createPopEffects() {
